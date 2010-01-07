@@ -8,7 +8,8 @@ Source-MD5: 1f558ff7ed296787b55bb1c6cf131108
 PatchFile: %n.patch
 PatchFile-MD5: 2628974b0e176495264bc477a73df450
 PatchScript: sed 's|@PREFIX@|%p|g' < %{PatchFile} | patch -p1
-SetMACOSX_DEPLOYMENT_TARGET: 10.3
+# Deployment target may not be required any more
+# SetMACOSX_DEPLOYMENT_TARGET: 10.3
 InstallScript:<<
 #!/bin/sh -ev
   make install DESTDIR=%d
@@ -16,6 +17,14 @@ InstallScript:<<
   rm -f %i/share/emacs/site-lisp/anthy/leim-list.el
 <<
 DocFiles: AUTHORS COPYING ChangeLog DIARY INSTALL NEWS README README.en
+InfoTest: <<
+ TestScript: <<
+    #!/bin/sh -ev
+      make -k check || exit 2
+ <<
+ TestDepends: check
+ TestSuiteSize: small
+<<
 SplitOff: <<
  Package: %N-el
  Description: Secure Japanese input system - elisp frontend
