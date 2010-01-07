@@ -1,0 +1,59 @@
+Package: libx264-80-shlibs
+Version: 0.0.20091224
+Revision: 5
+###
+BuildDepends: atk1 (>= 1.26.0-2), cairo (>= 1.8.8-2), expat1, fontconfig2-dev, freetype219, glib2-dev (>= 2.20.5-1), glitz, gtk+2-dev (>= 2.16.6-1), libgettext8-dev (>= 0.17-19), libiconv-dev, pango1-xft2-ft219-dev (>= 1.24.5-1), pixman (>= 0.16.0-1), x11-dev, xft2-dev, glitz, gettext-tools, fink (>= 0.24.12-1)
+Depends: x11
+###
+Source: ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20091224-2245.tar.bz2
+SourceDirectory: x264-snapshot-20091224-2245
+Source-MD5: 939c25da1bcd04d41a80eaddd7345686
+###
+PatchFile: %n.patch
+PatchFile-MD5: 76ce6a659f5b32f3088dc3785e008b99 
+###
+DocFiles: AUTHORS COPYING
+###
+ConfigureParams: --enable-pthread --enable-visualize --enable-pic --enable-shared --extra-cflags="-fno-common -I%p/lib/freetype219/include -I%p/include" --extra-ldflags="-L%p/lib/freetype219/lib" --host=%m-apple-darwin`uname -r`
+###
+CompileScript: <<
+  #!/bin/sh -ev
+  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:%p/lib/pango-ft219/lib/pkgconfig:%p/lib/freetype219/lib/pkgconfig:%p/lib/fontconfig2/lib/pkgconfig
+  %{default_script}
+<<
+InstallScript: <<
+  make install DESTDIR=%d
+<<
+###
+Shlibs: %p/lib/libx264.80.dylib 1.0.0 %n (>= 0.0.20091224-5)
+###
+SplitOff: <<
+  Package: x264
+  Depends: atk1-shlibs (>= 1.26.0-2), freetype219-shlibs, glib2-shlibs (>= 2.20.5-1), libgettext8-shlibs (>= 0.17-19), libiconv, libx264-80-shlibs (>= %v-%r), pango1-xft2-ft219-shlibs (>= 1.24.5-1), x11
+  Files: <<
+    bin
+    share
+  <<
+  DocFiles: AUTHORS COPYING
+<<
+SplitOff2: <<
+  Package: libx264-dev
+  Depends: libx264-80-shlibs (>= %v-%r)
+  BuildDependsOnly: true
+  Files: <<
+    include/x264.h
+    lib/libx264.a
+    lib/pkgconfig/x264.pc
+    lib/libx264.dylib
+  <<
+  DocFiles: AUTHORS COPYING
+<<
+###
+Description: Encoding H264/AVC video streams
+DescDetail: <<
+  x264 is a free library for encoding H264/AVC video streams
+<<
+###
+License: GPL
+Maintainer: Justin F. Hallett <thesin@users.sourceforge.net>
+Homepage: http://www.videolan.org/developers/x264.html

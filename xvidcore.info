@@ -1,0 +1,64 @@
+Package: xvidcore
+Version: 1.2.2
+Revision: 3
+Distribution: 10.4
+BuildDependsOnly: True
+###
+Conflicts: xvid
+Replaces: xvid
+BuildDepends: fink (>= 0.24.12)
+Depends: %N-shlibs (= %v-%r)
+###
+Source: http://downloads.xvid.org/downloads/%n-%v.tar.gz
+Source-MD5: 2ce9b1d280d703b5bc8e702c79e660b5
+SourceDirectory: xvidcore
+###
+PatchFile: %n.patch
+PatchFile-MD5: 6f206370036a88e9f98fcdd38807807a 
+PatchScript:<<
+  perl -pi -e 's, \-freduce\-all\-givs,,' build/generic/configure
+  %{default_script}
+<<
+###
+ConfigureParams: --disable-assembly
+CompileScript: <<
+#!/bin/sh -ev
+cd ./build/generic
+./configure %c
+make
+<<
+InstallScript: <<
+#!/bin/sh -ev
+cd ./build/generic
+make install DESTDIR=%d
+mv %i/lib/libxvidcore.4.dylib %i/lib/libxvidcore.4.1.0.dylib
+ln -s %p/lib/libxvidcore.4.1.0.dylib %i/lib/libxvidcore.4.dylib
+ln -s %p/lib/libxvidcore.4.dylib %i/lib/libxvidcore.dylib
+<<
+###
+DocFiles: AUTHORS ChangeLog ChangeLog-1.0 LICENSE README TODO doc
+###
+SplitOff: <<
+  Package: %N-shlibs
+  DocFiles: LICENSE
+  Conflicts: xvid-shlibs
+  Replaces: xvid-shlibs
+  Files: lib/libxvidcore.*.dylib
+  Shlibs: %p/lib/libxvidcore.4.dylib 4.0.0 %n (>= 1.2.2-3)
+<<
+###
+Description: XViD Media Codec library
+DescDetail: <<
+The Xvid video codec implements MPEG-4 Simple Profile and Advanced
+Simple Profile standards. It permits compressing and decompressing
+digital video in order to reduce the required bandwidth of video
+data for transmission over computer networks or efficient storage
+on CDs or DVDs. Due to its unrivalled quality Xvid has gained
+great popularity and is used in many other GPLed applications,
+like e.g. Transcode, MEncoder, MPlayer, Xine and many more.
+<<
+###
+License: GPL
+Maintainer: Ben Hines <bhines@alumni.ucsd.edu>
+#Upgrade to 1.2.2 by Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.xvid.org/Xvid-Codec.2.0.html

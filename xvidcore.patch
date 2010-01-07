@@ -1,0 +1,46 @@
+diff -ruN xvidcore.orig/src/xvid.c xvidcore/src/xvid.c
+--- xvidcore.orig/src/xvid.c	2009-12-31 16:18:42.000000000 +0900
++++ xvidcore/src/xvid.c	2009-12-31 16:20:38.000000000 +0900
+@@ -32,6 +32,18 @@
+   #include <unistd.h>
+ #endif
+ 
++#if defined(__APPLE__) && defined(__MACH__)
++#  include <sys/types.h>
++#  include <sys/sysctl.h>
++#  ifdef MAX
++#    undef MAX
++#  endif
++#  ifdef MIN
++#    undef MIN
++#  endif
++#endif
++
++
+ #include "xvid.h"
+ #include "decoder.h"
+ #include "encoder.h"
+@@ -677,8 +689,22 @@
+ 	info->num_threads = siSysInfo.dwNumberOfProcessors; /* number of _logical_ cores */
+   }
+ 
+-#else
++#elif defined(__APPLE__) && defined(__MACH__)
++
++  {
++    size_t len;
++    int    mib[2], ncpu;
++
++    mib[0] = CTL_HW;
++    mib[1] = HW_NCPU;
++    len    = sizeof(ncpu);
++    if (sysctl(mib, 2, &ncpu, &len, NULL, 0) == 0)
++      info -> num_threads = ncpu;
++    else
++      info -> num_threads = 1;
++  }
+ 
++#elif defined(_SC_NPROCESSORS_CONF)
+   info->num_threads = sysconf(_SC_NPROCESSORS_CONF);	
+ 
+ #endif
