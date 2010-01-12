@@ -1,0 +1,48 @@
+Package: scim-bridge
+Version: 0.4.15
+Revision: 1
+Source: mirror:sourceforge:scim/%n/%v/%n-%v.tar.gz
+Source-MD5: 03015dfdc01f8aa6ad933c695f47077b
+PatchFile: %n.patch
+PatchFile-MD5: ea118dea841ca6e42cd85e9a201dced2 
+License: GPL/LGPL
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.scim-im.org/projects/scim_bridge/
+Description: Scim Bridge Agent
+DescDetail:<<
+Scim-bridge is wrapper library for SCIM, written in C. Scim-bridge
+is separated in two parts, the agent and the clients. The agent is
+the IME server which communicates with SCIM. The clients are IMModules
+which communicate only with the agent so that there is no binary
+dependency between the clients and SCIM.
+<<
+DocFiles: ABOUT-NLS AUTHORS COPYING INSTALL NEWS README
+PatchScript:<<
+  %{default_script}
+  perl -pi -e "s,malloc.h,stdlib.h,g" common/*.c
+  perl -pi -e "s,alloca.h,stdlib.h,g" common/*.c
+  perl -pi -e "s,malloc.h,stdlib.h,g" agent/*.cpp
+  perl -pi -e "s,alloca.h,stdlib.h,g" agent/*.cpp
+<<
+BuildDepends: <<
+  fink (>= 0.24.12),
+  libgettext8-dev,
+  libiconv-bin,
+  scim-dev
+<<
+Depends: <<
+  libgettext8-shlibs,
+  libiconv,
+  scim
+<<
+setCPPFLAGS: -D__STDC_ISO_10646__
+ConfigureParams: --disable-dependency-tracking --disable-debug --disable-tests --enable-documents --enable-agent --disable-gtk2-immodule --disable-qt3-immodule --disable-qt4-immodule
+CompileScript:<<
+#!/bin/sh -ev
+./configure %c
+make
+<<
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<

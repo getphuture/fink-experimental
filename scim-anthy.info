@@ -1,0 +1,63 @@
+Package: scim-anthy
+Version: 1.2.4
+Revision: 1
+Source: http://ftp.de.debian.org/debian/pool/main/s/%n/%n_%v.orig.tar.gz
+SourceDirectory: %n-%v
+Source-MD5: 14c4d620bc5d6744a2fe6ef7d2bf2ecf
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>>
+Homepage: http://sourceforge.jp/projects/scim-imengine/
+License: GPL
+Description: SCIM with japanese anthy input
+DescDetail:<<
+scim-anthy is the SCIM IMEngine module
+using the Anthy input method.
+<<
+BuildDepends:<<
+	anthy-dev (>= 9100h-2),
+	atk1,
+	expat1,
+	fontconfig2-dev,
+	freetype219,
+	glib2-dev,
+	glitz,
+	gtk+2-dev,
+	intltool40,
+	libgettext8-dev,
+	libiconv-dev,
+	libpng3,
+	pango1-xft2-ft219-dev,
+	pixman,
+	scim-dev (>=1.4.7-1),
+	x11-dev
+<<
+Depends:<<
+	anthy-shlibs (>= 9100h-2),
+	atk1-shlibs,
+	expat1-shlibs,
+	fontconfig2-shlibs,
+	freetype219-shlibs,
+	glib2-shlibs,
+	glitz-shlibs,
+	gtk+2-shlibs,
+	kasumi (>=2.5-1),
+	libgettext8-shlibs,
+	libiconv,
+	libpng3-shlibs,
+	pango1-xft2-ft219-shlibs,
+	pixman-shlibs,
+	scim (>= 1.4.7-1),
+	x11-shlibs
+<<
+DocFiles: ABOUT-NLS COPYING INSTALL README TODO
+setCPPFLAGS: -I%p/include -D__STDC_ISO_10646__
+setLDFlags: -L%p/lib
+ConfigureParams: --disable-dependency-tracking --disable-debug --with-libintl-prefix=%p 
+CompileScript:<<
+#!/bin/sh -ev
+./configure %c
+make
+<<
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<

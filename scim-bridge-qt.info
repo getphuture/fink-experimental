@@ -1,0 +1,49 @@
+Package: scim-bridge-qt
+Version: 0.4.15
+Revision: 1
+Source: mirror:sourceforge:scim/scim-bridge/%v/scim-bridge-%v.tar.gz
+Source-MD5: 03015dfdc01f8aa6ad933c695f47077b
+PatchFile: scim-bridge.patch
+PatchFile-MD5: ea118dea841ca6e42cd85e9a201dced2 
+License: GPL/LGPL
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.scim-im.org/projects/scim_bridge/
+Description: Scim Bridge Agent GTK Modules
+DescDetail:<<
+Scim-bridge is wrapper library for SCIM, written in C. Scim-bridge
+is separated in two parts, the agent and the clients. The agent is
+the IME server which communicates with SCIM. The clients are IMModules
+which communicate only with the agent so that there is no binary
+dependency between the clients and SCIM.
+<<
+DocFiles: ABOUT-NLS AUTHORS COPYING INSTALL NEWS README
+PatchScript:<<
+  %{default_script}
+  perl -pi -e "s,malloc.h,stdlib.h,g" common/*.c
+  perl -pi -e "s,alloca.h,stdlib.h,g" common/*.c
+  perl -pi -e "s,malloc.h,stdlib.h,g" client-gtk/*.c
+  perl -pi -e "s,alloca.h,stdlib.h,g" client-gtk/*.c
+<<
+BuildDepends: fink (>= 0.24.12)
+Depends: scim-bridge (>= 0.4.15-1)
+setCPPFLAGS: -D__STDC_ISO_10646__
+ConfigureParams: --disable-dependency-tracking --disable-debug --disable-tests --disable-documents --disable-agent --disable-gtk2-immodule --enable-qt3-immodule --disable-qt4-immodule
+CompileScript:<<
+#!/bin/sh -ev
+./configure %c
+make
+<<
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<
+PostInstScript: <<
+if [ configure = "$1" ]; then
+    %p/sbin/update-gtk-immodules
+fi
+<<
+PostRmScript: <<
+if [ upgrade != "$1" ]; then
+    %p/sbin/update-gtk-immodules
+fi
+<<

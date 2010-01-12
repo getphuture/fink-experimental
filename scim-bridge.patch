@@ -1,0 +1,50 @@
+--- scim-bridge-0.4.15/common/scim-bridge-messenger.c	2007-06-02 12:33:46.000000000 +0900
++++ scim-bridge-0.4.15-patched/common/scim-bridge-messenger.c	2009-12-21 00:44:48.000000000 +0900
+@@ -35,6 +35,10 @@
+ #include "scim-bridge-messenger.h"
+ #include "scim-bridge-output.h"
+ 
++#ifndef MSG_NOSIGNAL
++#define MSG_NOSIGNAL 0
++#endif
++
+ /* Type definition */
+ struct _ScimBridgeMessenger
+ {
+--- scim-bridge-0.4.15/agent/scim-bridge-agent-interruption-listener.cpp	2007-06-02 12:33:47.000000000 +0900
++++ scim-bridge-0.4.15-patched/agent/scim-bridge-agent-interruption-listener.cpp	2009-12-21 01:59:46.000000000 +0900
+@@ -30,6 +30,10 @@
+ 
+ #include "scim-bridge-agent-interruption-listener.h"
+ 
++#ifndef MSG_NOSIGNAL
++#define MSG_NOSIGNAL 0
++#endif
++
+ /* Class definition */
+ class ScimBridgeAgentInterruptionListenerImpl: public ScimBridgeAgentInterruptionListener
+ {
+--- scim-bridge-0.4.15/agent/scim-bridge-agent-signal-listener.cpp	2007-11-07 19:16:55.000000000 +0900
++++ scim-bridge-0.4.15-patched/agent/scim-bridge-agent-signal-listener.cpp	2009-12-21 02:14:40.000000000 +0900
+@@ -31,6 +31,10 @@
+ #include "scim-bridge-agent-protected.h"
+ #include "scim-bridge-agent-signal-listener.h"
+ 
++#ifndef MSG_NOSIGNAL
++#define MSG_NOSIGNAL 0
++#endif
++
+ /* Static variable */
+ static bool signal_occurred = FALSE;
+ 
+--- scim-bridge-0.4.15/common/scim-bridge-string.c	2007-06-02 12:33:46.000000000 +0900
++++ scim-bridge-0.4.15-patched/common/scim-bridge-string.c	2009-12-21 01:39:26.000000000 +0900
+@@ -48,7 +48,7 @@
+             const size_t new_wstr_capacity = wstr_capacity + 10;
+             wchar *new_wstr_buffer = alloca (sizeof (wchar) * (new_wstr_capacity + 1));
+             memcpy (new_wstr_buffer, wstr_buffer, sizeof (wchar) * (wstr_capacity + 1));
+-            wstr_buffer = new_wstr_buffer;
++            new_wstr_buffer = wstr_buffer;
+             wstr_capacity = new_wstr_capacity;
+         }
+ 

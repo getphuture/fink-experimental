@@ -1,0 +1,20 @@
+Package: kasumi
+Version: 2.5
+Revision: 1
+Source: http://keihanna.dl.sourceforge.jp/kasumi/41436/kasumi-%v.tar.gz
+Source-MD5: f49d010cf1fa5672b4515502b961b8c8
+License: GPL
+Homepage: http://kasumi.sourceforge.jp/
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Description: Dictionary management tool for anthy
+DescDetail:<<
+Kasumi is a dictionary management tool for anthy
+kana-kanji conversion system.
+<<
+DocFiles: ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS README
+BuildDepends: anthy-dev (>=9100h-1)
+Depends: anthy-shlibs (>=9100h-1)
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<

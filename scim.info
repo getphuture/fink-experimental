@@ -1,0 +1,133 @@
+Package: scim
+Version: 1.4.7
+Revision: 1
+Source: mirror:sourceforge:%n/%v/%n-%v.tar.gz
+Source-MD5: 840dcfd4264a1443478c188ff747984e
+PatchFile: %n.patch
+PatchFile-MD5: 5233d5141b8e59f83a4e2b05554944e2
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.scim-im.org
+License: LGPL
+Description: Smart Common Input Method platform
+DescDetail: <<
+Smart Common Input Method platform, in short SCIM, is a development platform
+to make Input Method developers live easier. It has very clear architecture
+and very simple programming interface.
+<<
+DocFiles: ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS TODO
+BuildDepends:<<
+	fink (>= 0.24.12),
+	atk1,
+	cairo,
+	expat1,
+	fontconfig2-dev,
+	freetype219,
+	glib2-dev,
+	glitz,
+	gtk+2-dev,
+	intltool40,
+	libgettext8-dev,
+	libiconv-dev,
+        libpng3,
+        pango1-xft2-ft219-dev,
+        pixman,
+	x11-dev
+<<
+Depends:<<
+	%N-shlibs,
+	atk1-shlibs,
+	cairo-shlibs,
+	expat1-shlibs,
+	fontconfig2-shlibs,
+	freetype219-shlibs,
+	glib2-shlibs,
+	glitz-shlibs,
+	gtk+2-shlibs,
+	libgettext8-shlibs,
+	libiconv,
+        libpng3-shlibs,
+        pango1-xft2-ft219-shlibs,
+        pixman-shlibs,
+	x11-shlibs
+<<
+setCPPFLAGS: -I%p/include -D__STDC_ISO_10646__
+setLDFLAGS: -L%p/lib -lintl
+ConfigureParams: --disable-dependency-tracking --disable-debug --with-libintl-prefix=%p
+CompileScript:<<
+#!/bin/sh -ev
+./configure %c
+make
+<<
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<
+PostInstScript: <<
+if [ configure = "$1" ]; then
+    %p/sbin/update-gtk-immodules
+fi
+<<
+PostRmScript: <<
+if [ upgrade != "$1" ]; then
+    %p/sbin/update-gtk-immodules
+fi
+<<
+SplitOff:<<
+  Package: %N-shlibs
+  Files:<<
+    lib/libscim-1.0.8.dylib
+    lib/libscim-1.0.8.2.3.dylib
+    lib/libscim-gtkutils-1.0.8.dylib
+    lib/libscim-gtkutils-1.0.8.2.3.dylib
+    lib/libscim-x11utils-1.0.8.dylib
+    lib/libscim-x11utils-1.0.8.2.3.dylib
+  <<
+  Shlibs:<<
+    %p/lib/libscim-1.0.8.dylib 11.0.0 %n (>=1.4.7-1)
+    %p/lib/libscim-gtkutils-1.0.8.dylib 11.0.0 %n (>=1.4.7-1)
+    %p/lib/libscim-x11utils-1.0.8.dylib 11.0.0 %n (>=1.4.7-1)
+  <<
+  DocFiles: COPYING
+  Description: Shared libraries for %N
+<<
+SplitOff2:<<
+  Package: %N-dev
+  Depends: %N-shlibs
+  BuildDependsOnly: true
+  Files:<<
+    include
+    lib/gtk-2.0/immodules/im-scim.a
+    lib/gtk-2.0/immodules/im-scim.la
+    lib/libscim-1.0.a
+    lib/libscim-1.0.la
+    lib/libscim-gtkutils-1.0.a
+    lib/libscim-gtkutils-1.0.la
+    lib/libscim-x11utils-1.0.a
+    lib/libscim-x11utils-1.0.la
+    lib/pkgconfig
+    lib/scim-1.0/1.4.0/Config/simple.a
+    lib/scim-1.0/1.4.0/Config/simple.la
+    lib/scim-1.0/1.4.0/Config/socket.a
+    lib/scim-1.0/1.4.0/Config/socket.la
+    lib/scim-1.0/1.4.0/Filter/sctc.a
+    lib/scim-1.0/1.4.0/Filter/sctc.la
+    lib/scim-1.0/1.4.0/FrontEnd/socket.a
+    lib/scim-1.0/1.4.0/FrontEnd/socket.la
+    lib/scim-1.0/1.4.0/FrontEnd/x11.a
+    lib/scim-1.0/1.4.0/FrontEnd/x11.la
+    lib/scim-1.0/1.4.0/Helper/setup.a
+    lib/scim-1.0/1.4.0/Helper/setup.la
+    lib/scim-1.0/1.4.0/IMEngine/rawcode.a
+    lib/scim-1.0/1.4.0/IMEngine/rawcode.la
+    lib/scim-1.0/1.4.0/IMEngine/socket.a
+    lib/scim-1.0/1.4.0/IMEngine/socket.la
+    lib/scim-1.0/1.4.0/SetupUI/aaa-frontend-setup.a
+    lib/scim-1.0/1.4.0/SetupUI/aaa-frontend-setup.la
+    lib/scim-1.0/1.4.0/SetupUI/aaa-imengine-setup.a
+    lib/scim-1.0/1.4.0/SetupUI/aaa-imengine-setup.la
+    lib/scim-1.0/1.4.0/SetupUI/panel-gtk-setup.a
+    lib/scim-1.0/1.4.0/SetupUI/panel-gtk-setup.la
+  <<
+  DocFiles: COPYING
+  Description: Development librairies for %N
+<<
