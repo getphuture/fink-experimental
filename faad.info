@@ -1,0 +1,72 @@
+Package: faad
+Version: 2.7
+Revision: 1014
+###
+Depends: libfaad1-shlibs (>= %v-%r)
+BuildDepends: fink (>= 0.24.12), id3lib4-dev (>= 3.8.3-1014), libtool2, xmms, libiconv-dev, libgettext8-dev
+###
+Source: http://downloads.sourceforge.net/faac/%n2-%v.tar.gz
+Source-MD5: ee1b4d67ea2d76ee52c5621bc6dbf61e
+SourceDirectory: %n2-%v
+###
+# Only libmp4v21-{dev,shlibs} has C++ symbols
+GCC: 4.0
+###
+PatchScript: <<
+	%{default_script}
+#  # upgrade quoting tor stricter syntax rules in newer automake
+#  perl -pi -e 's/(AC_DEFUN\()(\S+)(,)/\1\[\2]\3/' configure.in
+#  echo "SUBDIRS = libfaad common frontend plugins" > Makefile.am
+#  sh bootstrap
+  ### Force external mp4v2 off
+  perl -pi -e 's,\#define HAVE_LIBMP4V2 1,\#undef HAVE_LIBMP4V2,g' configure
+  perl -pi -e 's,external_mp4v2=yes,external_mp4v2=no,g' configure
+  perl -pi -e 's,-lmp4v2,-lmp4v2dontusethisone,g' configure
+  ### Fix xmms plugin compile, need to include source includes first
+  perl -pi -e 's,-I. -I\$\(srcdir\) -I\$\(top_builddir\),-I. -I\$\(srcdir\) -I\$\(top_builddir\) -I\$\(top_srcdir\)/include,g' plugins/xmms/src/Makefile.in
+<<
+PatchFile: %n.patch
+PatchFile-MD5: b577ddd3f4c8a039e42a13d842d2e716
+###
+ConfigureParams: --with-xmms --with-drm --with-mp4v2 --with-pic --enable-shared --enable-static --mandir=%p/share/man --infodir=%p/share/info --libexecdir=%p/lib --disable-dependency-tracking
+###
+DocFiles: AUTHORS COPYING ChangeLog NEWS README* TODO
+###
+InstallScript: <<
+  make install DESTDIR=%d
+<<
+###
+SplitOff: <<
+  Package: libfaad1-shlibs
+  Files: <<
+    lib/libfaad.*.dylib
+  <<
+  Shlibs: <<
+    %p/lib/libfaad.2.dylib 3.0.0 %n (>= 2.7-1013)
+  <<
+  DocFiles: AUTHORS COPYING ChangeLog NEWS README* TODO
+<<
+###
+SplitOff2: <<
+  Package: libfaad1-dev
+  Depends: libfaad1-shlibs (= %v-%r)
+  BuildDependsOnly: true
+  Files: <<
+    lib/libfaad.a
+    lib/libfaad.la
+    lib/libfaad.dylib
+    include
+  <<
+  DocFiles: AUTHORS COPYING ChangeLog NEWS README* TODO
+<<
+###
+Description: FAAC audio library
+DescDetail: <<
+  FAAC is an Advanced Audio Coder (MPEG2-AAC, MPEG4-AAC). The goal of FAAC is
+  to explore the possibilities of AAC and exceed the quality of the currentlyi
+  best MP3 encoders.
+<<
+###
+License: GPL
+Maintainer: Justin F. Hallett <thesin@users.sourceforge.net>
+Homepage: http://www.audiocoding.com/

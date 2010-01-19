@@ -1,0 +1,33 @@
+Package: libtremor
+Version: 2010.01.10
+Revision: 2
+Source: http://figure.09.free.fr/fink/sources/tremor-snapshot-20100110.tar.gz
+Source-MD5: ad1dfbacc106e39285be29d8de4ba4c1 
+SourceDirectory: Tremor
+License: OSI-Approved
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.xiph.org/ogg/vorbis/
+Description: Ogg Vorbis Decoder
+DescDetail:<<
+The Tremor decoder library is an integer-only fully Ogg Vorbis compliant
+software decoder library.
+<<
+DocFiles: CHANGELOG COPYING README doc/*.html
+BuildDependsOnly: true
+BuildDepends: libtool2, libtool2, automake1.11, autoconf
+PatchScript:<<
+  perl -pi -e "s,libtool,glibtool," autogen.sh
+  perl -pi -e "s,configure,configure --prefix=%p --disable-dependency-tracking --enable-shared --enable-static," autogen.sh
+<<
+CompileScript:<<
+#!/bin/sh -ev
+./autogen.sh
+make
+<<
+SplitOff: <<
+  Package: %N-shlibs
+  Description: Shared libraries for %N
+  Files: lib/libvorbisidec.1.dylib
+  Shlibs: %p/lib/libvorbisidec.1.dylib 2.0.0 %n (>= 2010.01.10-2)
+  DocFiles: CHANGELOG COPYING README doc/*.html  
+<<
