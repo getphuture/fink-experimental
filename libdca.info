@@ -1,0 +1,45 @@
+Package: libdca
+Version: 20010.01.10
+Revision: 2
+Source: http://figure.09.free.fr/fink/sources/%n-snapshot-20100110.tar.gz 
+Source-MD5: bb547f8c8f694805de1e0584d529d7e9
+SourceDirectory: %n
+License: GPL
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Homepage: http://www.videolan.org/developers/libdca.html
+Description: DTS Coherent Acoustics decoder
+DescDetail: <<
+libdca is a free library for decoding DTS Coherent Acoustics streams.
+The code is written by Gildas Bazin and was based on the a52dec project.
+The library is still in early development stage but should already be
+quite useable.
+<<
+DocFiles: AUTHORS COPYING ChangeLog NEWS README TODO
+BuildDepends: automake1.11, autoconf
+Depends: %N-shlibs (=%v-%r)
+ConfigureParams: --with-extra-includes=%p/include --with-extra-libs=%p/lib --disable-dependency-tracking
+CompileScript:<<
+#!/bin/sh -ev
+./bootstrap
+./configure %c
+make
+<<
+InstallScript:<<
+#!/bin/sh -ev
+make install DESTDIR=%d
+<<
+SplitOff: <<
+  Package: %N-shlibs
+  Description: Shared libraries for %n
+  DocFiles: AUTHORS COPYING README
+  Files: lib/libdca.0.dylib lib/libdca.0.0.0.dylib
+  Shlibs: %p/lib/libdca.0.dylib 1.0.0 %n (>=2010.01.10-2)
+<<
+SplitOff2: <<
+  Package: %N-dev
+  Description: Development libraries for %N
+  Depends: %N-shlibs (=%v-%r)
+  BuildDependsOnly: True
+  DocFiles: AUTHORS COPYING README
+  Files: include lib/pkgconfig lib/libdca.dylib lib/libdts.a lib/libdca.a lib/libdca.la
+<<
