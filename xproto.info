@@ -1,0 +1,27 @@
+Package: xproto
+Version: 7.0.15
+Revision: 1
+Distribution: 10.4
+Source: http://ftp.x.org/pub/individual/proto/%n-%v.tar.gz
+Source-MD5: 9186713de3ec8a9fdd6ec3f4c4534fde
+License: Restrictive
+Homepage: http://www.freedesktop.org/wiki/Software/xlibs
+Maintainer: Pierre-Henri Lavigne <yakesonchihiro@aim.com>
+Description: X11 protocol .pc file
+DescDetail:<<
+This package attempts to provide the missing pkgconfig
+directory on Tiger about the X.Org DMXProto protocol headers.
+<<
+DocFiles: AUTHORS COPYING ChangeLog
+ConfigureParams: --disable-dependency-tracking
+CompileScript:<<
+#!/bin/sh -ev
+./configure %c
+make
+<<
+InstallScript:<<
+make install DESTDIR=%d
+rm -rf %i/include
+perl -pi -e "s,\/sw,\/usr\/X11R6,g" %i/lib/pkgconfig/xproto.pc
+<<
+
