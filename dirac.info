@@ -16,6 +16,9 @@ BuildDependsOnly:true
 # BuildDepends: graphviz, dvipdfm, latex2html
 Depends: %N-shlibs (>= %v-%r)
 DocFiles: AUTHORS COPYING ChangeLog INSTALL NEWS README TODO
+PatchScript:<<
+perl -pi -e "s,\-dR,\-R,g" doc/Makefile.am
+<<
 ConfigureParams: --disable-dependency-tracking --disable-mmx 
 CompileScript:<<
 #!/bin/sh -ev

@@ -28,14 +28,17 @@ BuildDepends: <<
   fink (>= 0.24.12),
   libgettext8-dev,
   libiconv-bin,
-  scim-dev
+  scim-dev,
+  x11-dev
 <<
 Depends: <<
   libgettext8-shlibs,
   libiconv,
-  scim
+  scim,
+  x11-shlibs
 <<
 setCPPFLAGS: -D__STDC_ISO_10646__
+setLDFLAGS: -L/usr/X11R6/lib -lX11 -lintl
 ConfigureParams: --disable-dependency-tracking --disable-debug --disable-tests --enable-documents --enable-agent --disable-gtk2-immodule --disable-qt3-immodule --disable-qt4-immodule
 CompileScript:<<
 #!/bin/sh -ev

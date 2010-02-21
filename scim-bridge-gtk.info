@@ -38,7 +38,8 @@ BuildDepends: <<
   libiconv-bin,
   libpng3,
   pango1-xft2-ft219-dev,
-  pixman
+  pixman,
+  x11-dev
 <<
 Depends: <<
   atk1-shlibs,
@@ -54,9 +55,11 @@ Depends: <<
   libpng3-shlibs,
   pango1-xft2-ft219-shlibs,
   pixman-shlibs,
-  scim-bridge (>= 0.4.15-1)
+  scim-bridge (>= 0.4.15-1),
+  x11-shlibs
 <<
 setCPPFLAGS: -D__STDC_ISO_10646__
+setLDFLAGS: -L/usr/X11R6/lib -lX11 -lintl
 ConfigureParams: --disable-dependency-tracking --disable-debug --disable-tests --disable-documents --disable-agent --enable-gtk2-immodule --disable-qt3-immodule --disable-qt4-immodule
 CompileScript:<<
 #!/bin/sh -ev
