@@ -44,7 +44,6 @@ SplitOff2: <<
     include/x264.h
     lib/libx264.a
     lib/pkgconfig/x264.pc
-    lib/libx264.88.dylib
   <<
   DocFiles: AUTHORS COPYING
 <<
